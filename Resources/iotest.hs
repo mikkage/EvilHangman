@@ -5,8 +5,10 @@ main ::IO ()
 main = do
 	inpStr <- readFile "dictionary.txt"
 	let s = words inpStr
-	--writeFile "output.txt" (map toUpper inpStr)
-	writeFile "out.txt" (filterDictionary 5 s)
+	putStrLn "Enter the length of words to filter:"
+	len <-getLine
+	let l = read len :: Int
+	writeFile "out.txt" (filterDictionary l s)
 
 filterDictionary :: Int -> [String] -> String
 filterDictionary len (x:xs)

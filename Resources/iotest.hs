@@ -1,5 +1,4 @@
 import System.IO
-import Data.Char(toUpper)
 
 main ::IO ()
 main = do
@@ -24,6 +23,12 @@ main = do
 	writeFile "out.txt" out
 	writeFile "outfiltered.txt" (filterLetter letter (lines out))
 
+--------------------------------------------------
+----------------Filter Dictionary-----------------
+--Takes in an Int and list of Strings, and returns
+--only the strings of that Int's length, separated
+--by new lines in a single string.
+--------------------------------------------------
 filterDictionary :: Int -> [String] -> String
 filterDictionary len (x:xs)
 	| len == (length x) = x ++ "\n" ++ filterDictionary len xs
@@ -33,6 +38,14 @@ filterDictionary len [x]
 	| otherwise = ""
 filterDictionary _ [] = ""
 
+
+--------------------------------------------------
+-------------------Filter Letter------------------
+--Takes in a character and a list of strings, and
+--returns a new string with words that do not
+--contain that character in a new string, separated
+--by new lines.
+--------------------------------------------------
 filterLetter :: Char -> [String] -> String
 filterLetter letter (x:xs)
 	| (elem letter x) == False = x ++ "\n" ++ filterLetter letter xs

@@ -33,9 +33,6 @@ filterDictionary :: Int -> [String] -> String
 filterDictionary len (x:xs)
 	| len == (length x) = x ++ "\n" ++ filterDictionary len xs
 	| otherwise = "" ++ filterDictionary len xs
-filterDictionary len [x]
-	| len == (length x) = x
-	| otherwise = ""
 filterDictionary _ [] = ""
 
 
@@ -50,7 +47,18 @@ filterLetter :: Char -> [String] -> String
 filterLetter letter (x:xs)
 	| (elem letter x) == False = x ++ "\n" ++ filterLetter letter xs
 	| otherwise = "" ++ filterLetter letter xs
-filterLetter letter [x]
-	| (elem letter x) == False = x
-	| otherwise = ""
 filterLetter _ [] = ""
+
+--------------------------------------------------
+-----------------Display Word---------------------
+--Takes in two strings, the first being the word to
+--be guessed and the second the list of letters that
+--have been guessed by the user, and display either
+--'-' for letters that have not been guessed or the
+--letters of those which have been guessed.
+--------------------------------------------------
+displayWord :: String -> String -> String
+displayWord (w:ws) guesses
+	| (elem w guesses) == True = [w] ++ displayWord ws guesses
+	| otherwise = "-" ++ displayWord ws guesses
+displayWord [] _ = ""

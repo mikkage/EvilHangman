@@ -1,9 +1,17 @@
 import System.IO
 
-main ::IO ()
+main :: IO ()
 main = do
 	inpStr <- readFile "dictionary.txt"
 	let s = words inpStr
+
+	-- insane hangman graphics
+	-- 6 files (0 - 5)
+	-- hangman0 is start, hangman5 is end
+	-- could add more if 5 guesses isnt enough
+	inpStr <- readFile "hangman5.txt"
+	let hangman = inpStr
+	putStrLn hangman
 
 	putStrLn "Enter the length of words to filter:"
 	len <-getLine
@@ -19,9 +27,9 @@ main = do
 	let o2 = "Longest word length: " ++ show (maximum (map length s))
 	putStrLn o2
 	
-	let out = filterDictionary l s
-	writeFile "out.txt" out
-	writeFile "outfiltered.txt" (filterLetter letter (lines out))
+	let out = (filterDictionary l s)
+	writeFile "out.txt" (unwords out)
+	writeFile "outfiltered.txt" (unwords (filterLetter letter out))
 
 --------------------------------------------------
 ----------------Filter Dictionary-----------------
@@ -29,28 +37,28 @@ main = do
 --only the strings of that Int's length, separated
 --by new lines in a single string.
 --------------------------------------------------
-filterDictionary :: Int -> [String] -> String
-filterDictionary len (x:xs)
-	| len == (length x) = x ++ "\n" ++ filterDictionary len xs
-	| otherwise = "" ++ filterDictionary len xs
-filterDictionary _ [] = ""
+filterDictionary :: Int -> [String] -> [String]
+filterDictionary len str = filter (checkStrLen len) str
 
+-- checkStrLen
+--   returns True if the length of the string argument is equal to the integer
+--   argument, else False
+checkStrLen :: Int -> String -> Bool
+checkStrLen len str 
+	| len == length str = True
+	| otherwise         = False 
 
 --------------------------------------------------
 -------------------Filter Letter------------------
 --Takes in a character and a list of strings, and
---returns a new string with words that do not
---contain that character in a new string, separated
---by new lines.
+--returns a new list of strings that do not
+--contain that letter.
 --------------------------------------------------
-filterLetter :: Char -> [String] -> String
-filterLetter letter (x:xs)
-	| (elem letter x) == False = x ++ "\n" ++ filterLetter letter xs
-	| otherwise = "" ++ filterLetter letter xs
-filterLetter _ [] = ""
+filterLetter :: Char -> [String] -> [String]
+filterLetter c str = filter (c `notElem`) str
 
 --------------------------------------------------
------------------Display Word---------------------
+-------------------Display Word-------------------
 --Takes in two strings, the first being the word to
 --be guessed and the second the list of letters that
 --have been guessed by the user, and display either
@@ -62,3 +70,4 @@ displayWord (w:ws) guesses
 	| (elem w guesses) == True = [w] ++ displayWord ws guesses
 	| otherwise = "-" ++ displayWord ws guesses
 displayWord [] _ = ""
+

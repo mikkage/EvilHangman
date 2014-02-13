@@ -41,22 +41,12 @@ filterDictionary :: Int -> [String] -> [String]
 filterDictionary len str = filter (checkStrLen len) str
 
 -- checkStrLen
---   returns True if the length of the string is equal to the integer,
---   else False.
+--   returns True if the length of the string argument is equal to the integer
+--   argument, else False
 checkStrLen :: Int -> String -> Bool
 checkStrLen len str 
 	| len == length str = True
-	| otherwise         = False
-
--- elemOfAll
---   returns True if the char is an element of every string in the list,
---   else False.
-elemOfAll :: Char -> [String] -> Bool
-elemOfAll c []     = False
-elemOfAll c (x:[]) = c `elem` x 
-elemOfAll c (x:xs)
-	| c `elem` x   = elemOfAll c xs
-	| otherwise    = False
+	| otherwise         = False 
 
 --------------------------------------------------
 -------------------Filter Letter------------------

@@ -81,6 +81,17 @@ displayWord (w:ws) guesses
 	| otherwise = "-" ++ displayWord ws guesses
 displayWord [] _ = ""
 
+
+getCharInput :: IO Char
+getCharInput = do
+	putStrLn "Enter a character to filter out:"
+	letter <- getChar
+	if (elem letter ['a'..'z'])
+		then return letter
+		else do
+			inp2 <- getCharInput
+			return inp2
+
 -- qsort
 --   quicksort in 3 lines (not in place)
 qsort :: (Ord a) => [a] -> [a]

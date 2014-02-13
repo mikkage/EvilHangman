@@ -84,11 +84,12 @@ displayWord [] _ = ""
 
 getCharInput :: IO Char
 getCharInput = do
-	putStrLn "Enter a character to filter out:"
+	putStrLn "Enter a lowercase letter:"
 	letter <- getChar
 	if (elem letter ['a'..'z'])
 		then return letter
 		else do
+			putStrLn "That is not a lowercase letter! Try again."
 			inp2 <- getCharInput
 			return inp2
 

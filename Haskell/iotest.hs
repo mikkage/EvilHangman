@@ -87,7 +87,9 @@ displayWord (w:ws) guesses
 	| otherwise = "-" ++ displayWord ws guesses
 displayWord [] _ = ""
 
-
+--Gets input from the user. this function will continue
+--call itself if input is not valid(not lowercase or
+--has already been guessed), then return that char.
 getCharInput :: String -> IO Char
 getCharInput guesses = do
 	letter <- getChar
@@ -96,7 +98,6 @@ getCharInput guesses = do
 		else do
 			inp2 <- getCharInput guesses
 			return inp2
-	--return letter
 	
 ---------------------------------------------------
 -------------------Play Game-----------------------
@@ -108,15 +109,23 @@ getCharInput guesses = do
 playGame :: [String] -> String -> Int -> IO ()
 playGame dic guesses remain = do
 	let dis = displayWord (head dic) guesses	--display word(covered)
-	putStrLn ("Letters guessed so far: " ++ guesses)	--show letters guesses so far
-	putStrLn (show remain ++ " guesses remain")	--show remaining guesses
-	putStrLn (head dic)				--print uncovered word(for testing)
-	putStrLn dis
-	putStr "Enter your guess: "
-	guess <- getCharInput guesses
-	let a = filterLetter guess dic
-	playGame a (guesses ++ [guess]) (remain -1)
-	putStrLn ""
+	if ((elem '-' dis) == False)
+		then do 
+			putStrLn dis
+			putStrLn "You win this time..."
+		else do
+			putStr ""
+			putStrLn ("Letters guessed so far: " ++ guesses)	--show letters guesses so far
+			putStrLn (show remain ++ " guesses remain")	--show remaining guesses
+			putStrLn (head dic)				--print uncovered word(for testing)
+			putStrLn dis
+			putStr "Enter your guess: "
+			guess <- getCharInput guesses
+			let a = filterLetter guess dic
+			if a == []
+			then playGame dic (guesses ++ [guess]) (remain -1)
+			else playGame a (guesses ++ [guess]) (remain -1)
+			putStr ""
 
 -- qsort
 --   quicksort in 3 lines (not in place)

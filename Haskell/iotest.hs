@@ -17,19 +17,25 @@ main = do
 	len <-getLine
 	let l = read len :: Int
 
-	putStrLn "Enter a character to filter out:"
-	letter <- getChar
+	let d = filterDictionary l s
+
+	playGame d [] 30	--start with 30 guesses, just for testing
+
+	putStrLn ""
+
+	--putStrLn "Enter a character to filter out:"
+	--letter <- getChar
 	
-	let o = "Words of length " ++ len ++ " filtered out from dictionary.txt to out.txt"
-	putStrLn o
-	let o1 = "Shortest word length: " ++ show (minimum (map length s))
-	putStrLn o1
-	let o2 = "Longest word length: " ++ show (maximum (map length s))
-	putStrLn o2
+	--let o = "Words of length " ++ len ++ " filtered out from dictionary.txt to --out.txt"
+	--putStrLn o
+	--let o1 = "Shortest word length: " ++ show (minimum (map length s))
+	--putStrLn o1
+	--let o2 = "Longest word length: " ++ show (maximum (map length s))
+	--putStrLn o2
 	
-	let out = (filterDictionary l s)
-	writeFile "out.txt" (unwords out)
-	writeFile "outfiltered.txt" (unwords (filterLetter letter out))
+	--let out = (filterDictionary l s)
+	--writeFile "out.txt" (unwords out)
+	--writeFile "outfiltered.txt" (unwords (filterLetter letter out))
 
 --------------------------------------------------
 ----------------Filter Dictionary-----------------
@@ -92,6 +98,25 @@ getCharInput = do
 			putStrLn "That is not a lowercase letter! Try again."
 			inp2 <- getCharInput
 			return inp2
+
+---------------------------------------------------
+-------------------Play Game-----------------------
+--The main loop for playing the game. It takes in a
+--list of strings for the current dictionary, a
+--string for the list of letter guesses, and an int
+--for the number of guesses remaining.
+---------------------------------------------------
+playGame :: [String] -> String -> Int -> IO ()
+playGame dic guesses remain = do
+	let dis = displayWord (head dic) guesses	--display word(covered)
+	putStrLn ("Letters guessed so far: " ++ guesses)	--show letters guesses so far
+	putStrLn (show remain ++ " guesses remain")	--show remaining guesses
+	putStrLn (head dic)				--print uncovered word(for testing)
+	putStrLn dis
+	guess <- getCharInput
+	let a = filterLetter guess dic
+	playGame a (guesses ++ [guess]) (remain -1)
+	putStrLn ""
 
 -- qsort
 --   quicksort in 3 lines (not in place)

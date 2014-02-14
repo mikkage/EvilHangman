@@ -13,7 +13,7 @@ main = do
 	let hangman = inpStr
 	putStrLn hangman
 
-	putStrLn "Enter the length of words to filter:"
+	putStrLn "Enter the length of the word:"
 	len <-getLine
 	let l = read len :: Int
 
@@ -88,17 +88,16 @@ displayWord (w:ws) guesses
 displayWord [] _ = ""
 
 
-getCharInput :: IO Char
-getCharInput = do
-	putStrLn "Enter a lowercase letter:"
+getCharInput :: String -> IO Char
+getCharInput guesses = do
 	letter <- getChar
-	if (elem letter ['a'..'z'])
+	if (((elem letter ['a'..'z']) == True) && ((elem letter guesses) == False))
 		then return letter
 		else do
-			putStrLn "That is not a lowercase letter! Try again."
-			inp2 <- getCharInput
+			inp2 <- getCharInput guesses
 			return inp2
-
+	--return letter
+	
 ---------------------------------------------------
 -------------------Play Game-----------------------
 --The main loop for playing the game. It takes in a
@@ -113,7 +112,8 @@ playGame dic guesses remain = do
 	putStrLn (show remain ++ " guesses remain")	--show remaining guesses
 	putStrLn (head dic)				--print uncovered word(for testing)
 	putStrLn dis
-	guess <- getCharInput
+	putStr "Enter your guess: "
+	guess <- getCharInput guesses
 	let a = filterLetter guess dic
 	playGame a (guesses ++ [guess]) (remain -1)
 	putStrLn ""

@@ -141,8 +141,3 @@ playGame dic guesses remain = do
 					if a == []
 					then playGame dic (guesses ++ [guess]) (remain)
 					else playGame a (guesses ++ [guess]) (remain - 1)
--- qsort
---   quicksort in 3 lines (not in place)
-qsort :: (Ord a) => [a] -> [a]
-qsort []     = []
-qsort (x:xs) = qsort (filter (< x) xs) ++ [x] ++ qsort (filter (>= x) xs)

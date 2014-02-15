@@ -1,5 +1,41 @@
 import System.IO
 
+main :: IO ()
+main = do
+	inpStr <- readFile "dictionary.txt"
+	let s = words inpStr
+
+	-- insane hangman graphics
+	-- 6 files (0 - 5)
+	-- hangman0 is start, hangman5 is end
+	-- could add more if 5 guesses isnt enough
+	inpStr <- readFile "hangman5.txt"
+	let hangman = inpStr
+	putStrLn hangman
+
+	putStrLn "Enter the length of the word:"
+	len <-getLine
+	let l = read len :: Int
+
+	let d = filterDictionary l s
+
+	playGame d [] 30	--start with 30 guesses, just for testing
+
+	putStrLn ""
+
+	--putStrLn "Enter a character to filter out:"
+	--letter <- getChar
+	
+	--let o = "Words of length " ++ len ++ " filtered out from dictionary.txt to --out.txt"
+	--putStrLn o
+	--let o1 = "Shortest word length: " ++ show (minimum (map length s))
+	--putStrLn o1
+	--let o2 = "Longest word length: " ++ show (maximum (map length s))
+	--putStrLn o2
+	
+	--let out = (filterDictionary l s)
+	--writeFile "out.txt" (unwords out)
+	--writeFile "outfiltered.txt" (unwords (filterLetter letter out))
 
 --------------------------------------------------
 ----------------Filter Dictionary-----------------
@@ -14,7 +50,7 @@ filterDictionary len str = filter (checkStrLen len) str
 --   returns True if the length of the string is equal to the integer,
 --   else False.
 checkStrLen :: Int -> String -> Bool
-checkStrLen len str
+checkStrLen len str 
 	| len == length str = True
 	| otherwise         = False
 

@@ -9,9 +9,9 @@ main = do
 	-- 6 files (0 - 5)
 	-- hangman0 is start, hangman5 is end
 	-- could add more if 5 guesses isnt enough
-	inpStr <- readFile "hangman5.txt"
-	let hangman = inpStr
-	putStrLn hangman
+	-- inpStr <- readFile "hangman5.txt"
+	--let hangman = inpStr
+	--putStrLn hangman
 
 	putStrLn "Enter the length of the word:"
 	len <-getLine
@@ -19,7 +19,7 @@ main = do
 
 	let d = filterDictionary l s
 
-	playGame d [] 30	--start with 30 guesses, just for testing
+	playGame d [] 20	--start with 30 guesses, just for testing
 
 	putStrLn ""
 
@@ -79,8 +79,8 @@ filterPos s strs = filter (compareStr s) strs
 compareStr :: String -> String -> Bool
 compareStr [] [] = True
 compareStr (a:as) (b:bs)
-	| a == '-' || a == b = compareStr as bs
-	| otherwise          = False
+	| ((a == '-') || a == b) = compareStr as bs
+	| otherwise = False
 
 --------------------------------------------------
 -------------------Display Word-------------------
@@ -118,22 +118,29 @@ getCharInput guesses = do
 playGame :: [String] -> String -> Int -> IO ()
 playGame dic guesses remain = do
 	let dis = displayWord (head dic) guesses	--display word(covered)
-	if ((elem '-' dis) == False)
-		then do 
-			putStrLn dis
-			putStrLn "You win this time..."
+	if (remain == 0)
+		then do
+			let out = "The word was: " ++ (head dic)
+			putStrLn out
+			hm <- readFile "hangman5.txt"
+			putStrLn hm
+			putStrLn "RIP in peace, hangman. You lose."
 		else do
-			putStrLn ("Letters guessed so far: " ++ guesses) --show letters guesses so far
-			putStrLn (show remain ++ " guesses remain")	--show remaining guesses
-			putStrLn (head dic)				--print uncovered word(for testing)
-			putStrLn dis
-			putStr "Enter your guess: "
-			guess <- getCharInput guesses
-			let a = filterLetter guess (filterPos dis dic)
-			if a == []
-			then playGame dic (guesses ++ [guess]) (remain - 1)
-			else playGame a (guesses ++ [guess]) (remain - 1)
-
+			if ((elem '-' dis) == False)
+				then do 
+					putStrLn dis
+					putStrLn "You win this time..."
+				else do
+					putStrLn ("Letters guessed so far: " ++ guesses) --show letters guesses so far
+					putStrLn (show remain ++ " guesses remain")	--show remaining guesses
+					putStrLn (head dic)				--print uncovered word(for testing)
+					putStrLn dis
+					putStr "Enter your guess: "
+					guess <- getCharInput guesses
+					let a = filterLetter guess (filterPos dis dic)
+					if a == []
+					then playGame dic (guesses ++ [guess]) (remain)
+					else playGame a (guesses ++ [guess]) (remain - 1)
 -- qsort
 --   quicksort in 3 lines (not in place)
 qsort :: (Ord a) => [a] -> [a]

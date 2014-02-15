@@ -73,13 +73,18 @@ elemOfAll c (x:xs)
 filterLetter :: Char -> [String] -> [String]
 filterLetter c str = filter (c `notElem`) str
 
-filterPos :: String -> [String] -> [String]
-filterPos s strs = filter (compareStr s) strs
+filterPos :: String -> [String] -> String -> [String]
+filterPos s strs g = filter (compareStr g s) strs
 
-compareStr :: String -> String -> Bool
-compareStr [] [] = True
-compareStr (a:as) (b:bs)
-	| ((a == '-') || a == b) = compareStr as bs
+
+compareStr :: String -> String -> String -> Bool
+compareStr _ [] [] = True
+compareStr g (a:as) (b:bs)
+	| (a == '-') && ((elem b g) == True) = False
+	| ((a == '-') || a == b) = compareStr g as bs
+	| otherwise = False
+compareStr [] (a:as) (b:bs)
+	| ((a == '-') || a == b) = compareStr [] as bs
 	| otherwise = False
 
 --------------------------------------------------
@@ -124,7 +129,7 @@ playGame dic guesses remain = do
 			putStrLn out
 			hm <- readFile "hangman5.txt"
 			putStrLn hm
-			putStrLn "RIP in peace, hangman. You lose."
+			putStrLn "RIP in peace, Hangman."
 		else do
 			if ((elem '-' dis) == False)
 				then do 
@@ -133,11 +138,11 @@ playGame dic guesses remain = do
 				else do
 					putStrLn ("Letters guessed so far: " ++ guesses) --show letters guesses so far
 					putStrLn (show remain ++ " guesses remain")	--show remaining guesses
-					putStrLn (head dic)				--print uncovered word(for testing)
+					--putStrLn (head dic)				--print uncovered word(for testing)
 					putStrLn dis
 					putStr "Enter your guess: "
 					guess <- getCharInput guesses
-					let a = filterLetter guess (filterPos dis dic)
+					let a = filterLetter guess (filterPos dis dic guesses)
 					if a == []
 					then playGame dic (guesses ++ [guess]) (remain)
 					else playGame a (guesses ++ [guess]) (remain - 1)

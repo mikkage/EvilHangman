@@ -129,7 +129,7 @@ playGame dic guesses remain = do
 			putStrLn dis
 			putStr "Enter your guess: "
 			guess <- getCharInput guesses
-			let a = filterLetter guess dic
+			let a = filterLetter guess (filterPos dis dic)
 			if a == []
 			then playGame dic (guesses ++ [guess]) (remain - 1)
 			else playGame a (guesses ++ [guess]) (remain - 1)

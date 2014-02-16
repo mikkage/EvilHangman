@@ -4,40 +4,13 @@ main :: IO ()
 main = do
 	inpStr <- readFile "dictionary.txt"
 	let s = words inpStr
-
-	-- insane hangman graphics
-	-- 6 files (0 - 5)
-	-- hangman0 is start, hangman5 is end
-	-- could add more if 5 guesses isnt enough
-	-- inpStr <- readFile "hangman5.txt"
-	--let hangman = inpStr
-	--putStrLn hangman
-
 	putStrLn "Enter the length of the word:"
 	len <-getLine
 	let l = read len :: Int
-
 	let d = filterDictionary l s
-
 	playGame d [] 20	--start with 30 guesses, just for testing
-
 	putStrLn ""
 
-	--putStrLn "Enter a character to filter out:"
-	--letter <- getChar
-	
-	--let o = "Words of length " ++ len ++ " filtered out from dictionary.txt to --out.txt"
-	--putStrLn o
-	--let o1 = "Shortest word length: " ++ show (minimum (map length s))
-	--putStrLn o1
-	--let o2 = "Longest word length: " ++ show (maximum (map length s))
-	--putStrLn o2
-	
-	--let out = (filterDictionary l s)
-	--writeFile "out.txt" (unwords out)
-	--writeFile "outfiltered.txt" (unwords (filterLetter letter out))
-
---------------------------------------------------
 ----------------Filter Dictionary-----------------
 --Takes in an Int and list of Strings, and returns
 --only the strings of that Int's length, separated
@@ -64,7 +37,6 @@ elemOfAll c (x:xs)
 	| c `elem` x   = elemOfAll c xs
 	| otherwise    = False
 
---------------------------------------------------
 -------------------Filter Letter------------------
 --Takes in a character and a list of strings, and
 --returns a new list of strings that do not
@@ -87,7 +59,6 @@ compareStr [] (a:as) (b:bs)
 	| ((a == '-') || a == b) = compareStr [] as bs
 	| otherwise = False
 
---------------------------------------------------
 -------------------Display Word-------------------
 --Takes in two strings, the first being the word to
 --be guessed and the second the list of letters that
@@ -113,7 +84,6 @@ getCharInput guesses = do
 			inp2 <- getCharInput guesses
 			return inp2
 	
----------------------------------------------------
 -------------------Play Game-----------------------
 --The main loop for playing the game. It takes in a
 --list of strings for the current dictionary, a

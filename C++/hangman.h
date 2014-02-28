@@ -2,6 +2,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <vector>
 using namespace std;
 class hangman
 {
@@ -19,6 +20,7 @@ public:
 	void restoreDictionary();
 	void printWord();
 	bool strContains(string, char);
+	void addGuess(char);
 
 	void setWord(string);
 	void setGuesses(string);

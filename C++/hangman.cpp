@@ -5,13 +5,14 @@ hangman::hangman()
 	string in;
 	fstream fin;
 	fin.open("dictionary.txt");
+	cout << "Loading dictionary...";
 	while(!fin.eof())
 	{
 		fin >> in;
 		dictionary.push_back(in);
-		//curDictionary.push_back(in);
 	}
 	fin.close();
+	cout << "Done" << endl;
 	guesses = "";
 }
 void hangman::showDic()
@@ -28,6 +29,7 @@ void hangman::filterByLength(int len)
 		if((*it).length() == len)
 			curDictionary.push_back(*it);
 	}
+	curWord = curDictionary.front();
 }
 void hangman::filterByLetter(char l)
 {
@@ -40,7 +42,11 @@ void hangman::filterByLetter(char l)
 		}
 	}
 	if(!tempList.empty())
+	{
+		curDictionary.clear();
 		curDictionary = tempList;
+	}
+	curWord = curDictionary.front();
 }
 void hangman::restoreDictionary()
 {
@@ -52,14 +58,14 @@ void hangman::restoreDictionary()
 }
 void hangman::printWord()
 {
+	cout << curWord << endl;
 	string dispWord = curWord;
-	std::size_t found = dispWord.find_first_of(guesses);
-	while(found != std::string::npos)
+	for(int i = 0; i < dispWord.length(); i++)
 	{
-		dispWord[found] = '-';
-		found = dispWord.find_first_of(guesses,found+1);
+		if(!strContains(guesses,dispWord[i]))
+			dispWord[i] = '-';
 	}
-	cout << dispWord;
+	cout << dispWord << endl;
 }
 bool hangman::strContains(string str, char g)
 {
@@ -70,11 +76,7 @@ bool hangman::strContains(string str, char g)
 	}
 	return false;
 }
-void hangman::setGuesses(string g)
+void hangman::addGuess(char c)
 {
-	guesses = g;
-}
-void hangman::setWord(string w)
-{
-	curWord = w;
+	guesses.push_back(c);
 }

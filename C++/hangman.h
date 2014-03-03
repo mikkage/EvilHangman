@@ -1,15 +1,18 @@
+#pragma once
 #include <list>
 #include <string>
 #include <iostream>
 #include <fstream>
 #include <vector>
 using namespace std;
+
 class hangman
 {
 private:
 	list<string> dictionary;	//Stores copy of entire dictionary.
-	list<string> curDictionary;	//Stores the filtered version of the dictionary.
+	list<string> *cur;
 	string curWord;
+	string showWord;
 	string guesses;
 	int remain;
 public:
@@ -17,11 +20,11 @@ public:
 	void showDic();
 	void filterByLength(int);
 	void filterByLetter(char);
+	void filterByPos();
 	void restoreDictionary();
 	void printWord();
 	bool strContains(string, char);
 	void addGuess(char);
-
-	void setWord(string);
-	void setGuesses(string);
+	void playGame();
+	string getPrintWord();
 };

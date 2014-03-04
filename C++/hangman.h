@@ -3,18 +3,17 @@
 #include <string>
 #include <iostream>
 #include <fstream>
-#include <vector>
 using namespace std;
 
 class hangman
 {
 private:
 	list<string> dictionary;	//Stores copy of entire dictionary.
-	list<string> *cur;
-	string curWord;
-	string showWord;
-	string guesses;
-	int remain;
+	list<string> *cur;			//Stores the dynamic dictionary
+	string curWord;				//Stores the uncovered current word
+	string showWord;			//Stores the covered word
+	string guesses;				//Stores characters that have been guessed so far.
+	int remain;					//Tries remaining.
 public:
 	hangman();
 	void showDic();

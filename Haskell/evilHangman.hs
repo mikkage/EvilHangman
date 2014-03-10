@@ -8,7 +8,7 @@ main = do
 	len <-getLine
 	let l = read len :: Int
 	let d = filterDictionary l s
-	playGame d [] 20	--start with 30 guesses, just for testing
+	playGame d [] 10	--start with 10 guesses, just for testing
 	putStrLn ""
 
 ----------------Filter Dictionary-----------------
@@ -105,7 +105,7 @@ playGame dic guesses remain = do
 			putStrLn out
 			hm <- readFile "hangman5.txt"
 			putStrLn hm
-			putStrLn "RIP in peace, Hangman."
+			putStrLn "R.I.P. in peace, Hangman."
 		else do
 			if ((elem '-' dis) == False)
 				then do 

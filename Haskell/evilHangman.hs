@@ -107,15 +107,14 @@ playGame dic guesses remain = do
 			putStrLn hm
 			putStrLn "R.I.P. in peace, Hangman."
 		else do
+			putStrLn dis
 			if ((elem '-' dis) == False)
 				then do 
-					putStrLn dis
 					putStrLn "You win this time..."
 				else do
 					putStrLn ("Letters guessed so far: " ++ guesses) --show letters guesses so far
 					putStrLn (show remain ++ " guesses remain")	--show remaining guesses
 					--putStrLn (head dic)				--print uncovered word(for testing)
-					putStrLn dis
 					putStr "Enter your guess: "
 					guess <- getCharInput guesses
 					let a = filterLetter guess (filterPos dis dic guesses)

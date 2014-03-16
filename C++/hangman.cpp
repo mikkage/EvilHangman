@@ -1,10 +1,10 @@
 #pragma once
-#include <iostream>
 #include "hangman.h"
 hangman::hangman()
 {
 	dict = new string[150000];
 	curDict = new string[100000];
+	dict1 = new string[50000];
 	dictLen = 0;
 	string in;
 	fstream fin;
@@ -13,7 +13,6 @@ hangman::hangman()
 	while(!fin.eof())
 	{
 		fin >> in;
-		//dictionary.push_back(in);
 		dict[dictLen] = in;
 		dictLen++;
 	}
@@ -23,11 +22,6 @@ hangman::hangman()
 }
 void hangman::showDic()	//Prints out filtered dictionary
 {
-	/*
-	for(list<string>::iterator it = cur->begin(); it != cur->end(); it++)
-	{
-		cout << *it << endl;
-	}*/
 	for(int i = 0; i < curLen; i++)
 	{
 		cout << dict[i] << endl;
@@ -49,7 +43,6 @@ void hangman::filterByLength(int length)	//Filters the dynamic dictionary to con
 void hangman::filterByLetter(char l)	//Filters the dynamic dictionary to only contain words which do not contain
 										//the given letter, if possible
 {
-	string *dict1 = new string[100000];
 	int dict1Len = 0;
 
 	for(int i = 0; i < curLen; i++)
@@ -72,8 +65,6 @@ void hangman::filterByLetter(char l)	//Filters the dynamic dictionary to only co
 }
 void hangman::filterByPos()	//Filters out any words which do not fit a partially revealed pattern.
 {
-	list<string> *tempList = new list<string>;
-	string *dict1 = new string[100000];
 	int dict1Len = 0;
 	string curReveal = getPrintWord();
 	bool doPosFilter = false;
@@ -131,13 +122,10 @@ bool hangman::strContains(string s, char g)	//Returns true if the given string c
 }
 void hangman::restoreDictionary()	//Empties out the dynamic dictionary.
 {
-	//delete cur;
-	//cur = new list<string>;
 	curLen = 0;
 }
 void hangman::printWord()	//Prints out the current word, with any guessed letters exposed.
 {
-	//cout << curWord << endl;	//TESTING
 	string dispWord = curWord;
 	for(int i = 0; i < dispWord.length(); i++)
 	{

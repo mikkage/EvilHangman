@@ -18,6 +18,7 @@ private:
 	int dictLen;
 	string *curDict;
 	int curLen;
+	string *dict1;
 public:
 	hangman();
 	void showDic();

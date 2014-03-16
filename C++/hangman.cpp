@@ -1,8 +1,11 @@
 #pragma once
+#include <iostream>
 #include "hangman.h"
 hangman::hangman()
 {
-	//initialize dictionary list, load full dictionary.
+	dict = new string[150000];
+	curDict = new string[100000];
+	dictLen = 0;
 	string in;
 	fstream fin;
 	fin.open("dictionary.txt");
@@ -10,51 +13,68 @@ hangman::hangman()
 	while(!fin.eof())
 	{
 		fin >> in;
-		dictionary.push_back(in);
+		//dictionary.push_back(in);
+		dict[dictLen] = in;
+		dictLen++;
 	}
 	fin.close();
-	cout << "Done" << endl;
-	cur = new list<string>;	//initialize dynamic dictionary.
+	cout << endl << "Done"<< endl;
+	curLen = 0;
 }
 void hangman::showDic()	//Prints out filtered dictionary
 {
+	/*
 	for(list<string>::iterator it = cur->begin(); it != cur->end(); it++)
 	{
 		cout << *it << endl;
+	}*/
+	for(int i = 0; i < curLen; i++)
+	{
+		cout << dict[i] << endl;
 	}
 }
 void hangman::filterByLength(int length)	//Filters the dynamic dictionary to contain words of only a certain length.
 {
-	delete cur;	//Clear current dictionary, then initialize a new empty one.
-	cur = new list<string>;
-	for(list<string>::iterator it = dictionary.begin(); it != dictionary.end(); it++)
+	curLen = 0;
+	for(int i = 0; i < dictLen; i++)
 	{
-		if((*it).length() == length)
-			cur->push_back(*it);
+		if(dict[i].length() == length)
+		{
+			curDict[curLen] = dict[i];
+			curLen++;
+		}
 	}
-	curWord = cur->front();	//Set current word to the head of the list.
+	curWord = curDict[0];
 }
 void hangman::filterByLetter(char l)	//Filters the dynamic dictionary to only contain words which do not contain
 										//the given letter, if possible
 {
-	list<string> *tempList = new list<string>;
-	for(list<string>::iterator it = cur->begin(); it != cur->end(); it++)
+	string *dict1 = new string[100000];
+	int dict1Len = 0;
+
+	for(int i = 0; i < curLen; i++)
 	{
-		if(!strContains(*it,l))
+		if(!strContains(curDict[i], l))
 		{
-			tempList->push_back(*it);	//Go through dynamic dictionary, and add any words that do not have the given
-		}								//character to the temp dictionary.
+			dict1[dict1Len] = curDict[i];
+			dict1Len++;
+		}
 	}
-	if(!tempList->empty())				//If the temp dictionary is not empty, then there are words which fit the criteria
+	if(dict1Len > 0)
 	{
-		delete cur;			//Clear current dynamic dictionary
-		cur = tempList;		//Set the dynamic dictionary to the one which has just been made.
-	}						//If the temp dictionary is empty, that means there are no words which fit the criteria, and we
-							//continue to use the original version of the dynamic dictionary
-	curWord = cur->front();	//Update current word.
+		for(int i = 0; i < dict1Len; i++)
+		{
+			curDict[i] = dict1[i];
+		}
+		curLen = dict1Len;
+	}
+	curWord = curDict[0];
 }
 void hangman::filterByPos()	//Filters out any words which do not fit a partially revealed pattern.
 {
+	list<string> *tempList = new list<string>;
+	string *dict1 = new string[100000];
+	int dict1Len = 0;
 	string curReveal = getPrintWord();
 	bool doPosFilter = false;
 	for(int i = 0; i < curReveal.length(); i ++)	//Check to see if the current word has any letters revealed(e.g. not "------")
@@ -64,11 +84,10 @@ void hangman::filterByPos()	//Filters out any words which do not fit a partially
 	}								//If the current word only contains '-', then we do not have to filter by position
 	if(doPosFilter)					//If any letters are revealed, then we must make sure all words that do not fit that pattern are removed.
 	{
-	list<string> *tempList = new list<string>;
-	for(list<string>::iterator it = cur->begin(); it != cur->end(); it++)	//Go through entire dynamic dictionary and determine which words to add.
+	for(int j = 0; j < curLen; j++)
 	{
 		bool add = true;
-		for(int i = 0; i < (*it).length(); i++)
+		for(int i = 0; i < curDict[j].length(); i++)
 		{
 			if(curReveal[i] == '-')
 			{
@@ -79,19 +98,26 @@ void hangman::filterByPos()	//Filters out any words which do not fit a partially
 			}
 			else									//Otherwise, the current character is a letter.
 			{
-				if((*it)[i] != curReveal[i])		//If the two words do not have the same letter at the same position, then it does not get
+				//If the two words do not have the same letter at the same position, then it does not get
+				if(curDict[j][i] != curReveal[i])
 					add = false;					//added to the temp dictionary.
 			}
 		}
 		if(add)										//If add is still true, then the word has passed all of the tests and can be added to the
-			tempList->push_back(*it);				//temp dictionary
+		{
+			dict1[dict1Len] = curDict[j];
+			dict1Len++;
+		}
 	}
-	if(!tempList->empty())							//Check to see if the temp dictionary is empty/
+	if(dict1Len != 0)
 	{
-		delete cur;									//If not, then we can replace the current dynamic dictionary to the temp dictionary.
-		cur = tempList;								//If it is, then we have to continue to use the original dynamic dictionary.
+		for(int i = 0; i < dict1Len; i++)
+		{
+			curDict[i] = dict1[i];
+		}
+		curLen = dict1Len;
 	}
-	curWord = cur->front();							//Update current word.
+	curWord = curDict[0];
 	}
 }
 bool hangman::strContains(string s, char g)	//Returns true if the given string contains the given character, false if it does not.
@@ -105,8 +131,9 @@ bool hangman::strContains(string s, char g)	//Returns true if the given string c
 }
 void hangman::restoreDictionary()	//Empties out the dynamic dictionary.
 {
-	delete cur;
-	cur = new list<string>;
+	//delete cur;
+	//cur = new list<string>;
+	curLen = 0;
 }
 void hangman::printWord()	//Prints out the current word, with any guessed letters exposed.
 {
@@ -162,10 +189,10 @@ void hangman::playGame()	//Method to play the game.
 				}
 			}
 			filterByLetter(guess);				//Filter out words with the guessed letter.
-			if(strContains(showWord,guess))		//If the displayed word contains the guessed letter, the guess was correct and
+			if(strContains(getPrintWord(),guess))		//If the displayed word contains the guessed letter, the guess was correct and
 				remain++;						//a guess is refunded.
-
-			cout << "You have " << remain << " guesses left." << endl;
+			cout << "You have " << remain << " guesses left." << endl << endl;
+			cout << "Guesses so far: " << intersperse(guesses,' ') << endl;
 			printWord();
 		}
 		if(!won)	//If you use up the guesses without revealing the full word, you lost.
@@ -195,4 +222,14 @@ string hangman::getPrintWord()	//Returns the displayed word, which can be reveal
 			dispWord[i] = '-';
 	}
 	return dispWord;
+}
+string hangman::intersperse(string s, char c)
+{
+	string retrnVal = "";
+	for(int i = 0;i < s.length(); i++)
+	{
+		retrnVal.push_back(s[i]);
+		retrnVal.push_back(c);
+	}
+	return retrnVal;
 }

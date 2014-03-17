@@ -3,12 +3,12 @@ import System.IO
 main :: IO ()
 main = do
 	inpStr <- readFile "dictionary.txt"
-	let s = words inpStr
+	let s = words inpStr				--read in dictionary as a list of strings
 	putStrLn "Enter the length of the word:"
 	len <-getLine
 	let l = read len :: Int
-	let d = filterDictionary l s
-	playGame d [] 10	--start with 10 guesses, just for testing
+	let d = filterDictionary l start	--filter the dictionary to have words of length l.
+	playGame d [] 10	--start with 10 guesses
 	putStrLn ""
 
 ----------------Filter Dictionary-----------------
@@ -101,17 +101,17 @@ playGame dic guesses remain = do
 	let dis = displayWord (head dic) guesses	--display word(covered)
 	if (remain == 0)
 		then do
-			let out = "The word was: " ++ (head dic)
+			let out = "The word was: " ++ (head dic)	--player has lost, show the word
 			putStrLn out
 			hm <- readFile "hangman5.txt"
 			putStrLn hm
 			putStrLn "R.I.P. in peace, Hangman."
 		else do
 			putStrLn dis
-			if ((elem '-' dis) == False)
+			if ((elem '-' dis) == False)				--player has won
 				then do 
 					putStrLn "You win this time..."
-				else do
+				else do 								--player has not won, go on with the game
 					putStrLn ("Letters guessed so far: " ++ guesses) --show letters guesses so far
 					putStrLn (show remain ++ " guesses remain")	--show remaining guesses
 					--putStrLn (head dic)				--print uncovered word(for testing)
@@ -119,5 +119,5 @@ playGame dic guesses remain = do
 					guess <- getCharInput guesses
 					let a = filterLetter guess (filterPos dis dic guesses)
 					if a == []
-					then playGame dic (guesses ++ [guess]) (remain)
-					else playGame a (guesses ++ [guess]) (remain - 1)
+					then playGame dic (guesses ++ [guess]) (remain) --if the filtered list is empty, then the player got a letter right
+					else playGame a (guesses ++ [guess]) (remain - 1)	--if the list has elements, then there are words that do not contain that letter.

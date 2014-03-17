@@ -22,12 +22,12 @@ private:
 public:
 	hangman();
 	void showDic();
-	void filterByLength(int);
-	void filterByLetter(char);
-	void filterByPos();
+	void filterLength(int);
+	void filterLetter(char);
+	void filterPos();
 	void restoreDictionary();
 	void printWord();
-	bool strContains(string, char);
+	bool elem(string, char);
 	void addGuess(char);
 	void playGame();
 	string getPrintWord();

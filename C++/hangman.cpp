@@ -27,7 +27,7 @@ void hangman::showDic()	//Prints out filtered dictionary
 		cout << dict[i] << endl;
 	}
 }
-void hangman::filterByLength(int length)	//Filters the dynamic dictionary to contain words of only a certain length.
+void hangman::filterLength(int length)	//Filters the dynamic dictionary to contain words of only a certain length.
 {
 	curLen = 0;
 	for(int i = 0; i < dictLen; i++)
@@ -40,14 +40,14 @@ void hangman::filterByLength(int length)	//Filters the dynamic dictionary to con
 	}
 	curWord = curDict[0];
 }
-void hangman::filterByLetter(char l)	//Filters the dynamic dictionary to only contain words which do not contain
+void hangman::filterLetter(char l)	//Filters the dynamic dictionary to only contain words which do not contain
 										//the given letter, if possible
 {
 	int dict1Len = 0;
 
 	for(int i = 0; i < curLen; i++)
 	{
-		if(!strContains(curDict[i], l))
+		if(!elem(curDict[i], l))
 		{
 			dict1[dict1Len] = curDict[i];
 			dict1Len++;
@@ -63,7 +63,7 @@ void hangman::filterByLetter(char l)	//Filters the dynamic dictionary to only co
 	}
 	curWord = curDict[0];
 }
-void hangman::filterByPos()	//Filters out any words which do not fit a partially revealed pattern.
+void hangman::filterPos()	//Filters out any words which do not fit a partially revealed pattern.
 {
 	int dict1Len = 0;
 	string curReveal = getPrintWord();
@@ -82,7 +82,7 @@ void hangman::filterByPos()	//Filters out any words which do not fit a partially
 		{
 			if(curReveal[i] == '-')
 			{
-				if(strContains(guesses,curWord[i]))	//If the current character is '-', then we have to check to see if the revealed version
+				if(elem(guesses,curWord[i]))	//If the current character is '-', then we have to check to see if the revealed version
 				{									//has an exposed character at that same position.
 					add = false;					//If it does, then it does not fit the pattern and should not be added to the temp dictionary.
 				}
@@ -111,7 +111,7 @@ void hangman::filterByPos()	//Filters out any words which do not fit a partially
 	curWord = curDict[0];
 	}
 }
-bool hangman::strContains(string s, char g)	//Returns true if the given string contains the given character, false if it does not.
+bool hangman::elem(string s, char g)	//Returns true if the given string contains the given character, false if it does not.
 {
 	for(int i = 0; i < s.length(); i++)
 	{
@@ -129,7 +129,7 @@ void hangman::printWord()	//Prints out the current word, with any guessed letter
 	string dispWord = curWord;
 	for(int i = 0; i < dispWord.length(); i++)
 	{
-		if(!strContains(guesses,dispWord[i]))
+		if(!elem(guesses,dispWord[i]))
 			dispWord[i] = '-';
 	}
 	cout << dispWord << endl;
@@ -152,32 +152,32 @@ void hangman::playGame()	//Method to play the game.
 		cout << "Enter the length of the word:";
 		cin >> len;
 
-		filterByLength(len);	//Filter out words of a certain length
+		filterLength(len);	//Filter out words of a certain length
 		printWord();
 
 		while (remain > 0)		//Main loop for making guesses.
 		{
 			string testWin = getPrintWord();
-			if(!strContains(testWin, '-'))	//Check to see if the user has won(displayed string does not contain any '-')
+			if(!elem(testWin, '-'))	//Check to see if the user has won(displayed string does not contain any '-')
 				won = true;
 			if(won)	//If you have revealed the full word, break out of the while loop.
 				break;
 			bool validChar = false;
 
-			filterByPos();	//Filter by position in case any letters are revealed. 
+			filterPos();	//Filter by position in case any letters are revealed. 
 			while(!validChar)
 			{
 				cout << "Enter your guess:";
 				cin >> guess;
-				if(!strContains(guesses,guess))	//Make sure the letter has not been guessed already.
+				if(!elem(guesses,guess))	//Make sure the letter has not been guessed already.
 				{
 					validChar = true;
 					guesses.push_back(guess);	//Append guessed character to end of guesses string.
 					remain--;					//Used up a guess.
 				}
 			}
-			filterByLetter(guess);				//Filter out words with the guessed letter.
-			if(strContains(getPrintWord(),guess))		//If the displayed word contains the guessed letter, the guess was correct and
+			filterLetter(guess);				//Filter out words with the guessed letter.
+			if(elem(getPrintWord(),guess))		//If the displayed word contains the guessed letter, the guess was correct and
 				remain++;						//a guess is refunded.
 			cout << "You have " << remain << " guesses left." << endl << endl;
 			cout << "Guesses so far: " << intersperse(guesses,' ') << endl;
@@ -206,7 +206,7 @@ string hangman::getPrintWord()	//Returns the displayed word, which can be reveal
 	string dispWord = curWord;
 	for(int i = 0; i < dispWord.length(); i++)
 	{
-		if(!strContains(guesses,dispWord[i]))
+		if(!elem(guesses,dispWord[i]))
 			dispWord[i] = '-';
 	}
 	return dispWord;

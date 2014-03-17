@@ -9,7 +9,6 @@ hangman::hangman()
 	string in;
 	fstream fin;
 	fin.open("dictionary.txt");
-	cout << "Loading dictionary...";
 	while(!fin.eof())
 	{
 		fin >> in;
@@ -17,7 +16,6 @@ hangman::hangman()
 		dictLen++;
 	}
 	fin.close();
-	cout << endl << "Done"<< endl;
 	curLen = 0;
 }
 void hangman::showDic()	//Prints out filtered dictionary
@@ -41,10 +39,8 @@ void hangman::filterLength(int length)	//Filters the dynamic dictionary to conta
 	curWord = curDict[0];
 }
 void hangman::filterLetter(char l)	//Filters the dynamic dictionary to only contain words which do not contain
-										//the given letter, if possible
-{
+{									//the given letter, if possible
 	int dict1Len = 0;
-
 	for(int i = 0; i < curLen; i++)
 	{
 		if(!elem(curDict[i], l))

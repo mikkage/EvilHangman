@@ -38,9 +38,11 @@ void hangman::filterLength(int length)	//Filters the dynamic dictionary to conta
 	}
 	curWord = curDict[0];
 }
-void hangman::filterLetter(char l)	//Filters the dynamic dictionary to only contain words which do not contain
-{									//the given letter, if possible
+void hangman::filterLetter(char l)	//Filters the dictionary to only contain words that do not contain
+										//the given letter, if possible
+{
 	int dict1Len = 0;
+
 	for(int i = 0; i < curLen; i++)
 	{
 		if(!elem(curDict[i], l))

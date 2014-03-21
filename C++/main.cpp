@@ -5,7 +5,7 @@ using namespace std;
 int main()
 {
 	hangman h;
-	h.playGame();
+	h.playGame();	
 	cin.get();
 	return 0;
 }

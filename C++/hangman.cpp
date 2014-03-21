@@ -1,4 +1,3 @@
-#pragma once
 #include "hangman.h"
 hangman::hangman()
 {

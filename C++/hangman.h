@@ -1,6 +1,6 @@
 //Note that this has only been tested to work in Visual Studio 2012.
 //May not compile and or work correctly on other platforms/compilers.
-#pragma once
+
 #include <list>
 #include <string>
 #include <iostream>

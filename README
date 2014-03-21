@@ -1,0 +1,46 @@
+Evil Hangman
+CMPS112 Final Project
+Reid Anetsberger <ranetsbe>
+Michael Parker <msparker>
+
+
+Requirements
+
+Haskell GHC Compiler
+Python3 Compiler
+GNU g++ Compiler
+
+
+Installation
+
+--- All Platforms ---
+dictionary.txt must be placed in the same directory that the executable is running from
+in order for the game to work.
+
+--- Haskell ---
+Along with dictionary.txt, hangman5.txt must also be in the same directory as the executable.
+
+The program can be run in GHCI with
+> :l evilHangman.py
+> main
+
+Optionally, the program may be compiled on the command line with
+$ GHC evilHangman.hs
+
+run with 
+$ ./evilHangman
+
+
+--- Python ---
+The program can be run on the command line with
+$ python3 evilHangman.py
+
+
+--- C++ ---
+The program can be compiled with the make command on *nix systems
+
+Optionally, compile the program on the command line with
+$ g++ -O3 -o evilHangman main.cpp hangman.cpp
+
+run with
+$ ./evilHangman
